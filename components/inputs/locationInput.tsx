@@ -33,9 +33,17 @@ export function LocationInput({
   const [searchText, setSearchText] = useState('')
   const [address, setAddress] = useState('')
 
-  const handleChange = (search: string) => {
-    setSearchText(search)
+const handleChange = (search: string) => {
+  setSearchText(search)
+
+  if (window.location.hostname === 'localhost') {
+    setLocation({
+      lat: 0,
+      long: 0,
+      address: search
+    })
   }
+}
 
   const handleSelect = (address: string, placeID: string) => {
     console.log('handleSelect', address)

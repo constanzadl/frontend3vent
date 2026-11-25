@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useAuth } from '../../contexts/auth'
 import { FileImageInput } from '../../components/inputs/fileImageInput'
 import { uploadImageToStorage } from '../../services/upload_image_to_storage'
+import { useRouter } from 'next/router'
 
 interface LocationData {
   lat: number
@@ -16,6 +17,7 @@ interface LocationData {
 }
 
 export default function CreateUser() {
+  const router = useRouter()
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [location, setLocation] = useState<LocationData>()
@@ -35,7 +37,7 @@ export default function CreateUser() {
         setName(docSnap.data().username)
         setBio(docSnap.data().bio)
         setLocation(docSnap.data().location)
-        setAvatar(`${docSnap.data().gravatar}?s=200`)
+        setAvatar(docSnap.data().avatar || '')
       } else {
         // doc.data() will be undefined in this case
         console.log('No such document!')
@@ -52,6 +54,17 @@ export default function CreateUser() {
     location?: LocationData
   ) => {
     try {
+      if (!fileImg) {
+  const docRef = doc(db, 'users', uid)
+
+  await updateDoc(docRef, {
+    username: name,
+    bio: bio,
+    ...(location ? { location } : {})
+  })
+
+  return true
+}
       await uploadImageToStorage(
         fileImg,
         `${uid}/profile.jpg` ?? '',
@@ -75,6 +88,12 @@ export default function CreateUser() {
   return (
     <div className="h-screen w-screen bg-secondaryBg">
       <div className="mx-auto flex max-w-[300px] flex-col-reverse items-center justify-center lg:max-w-full lg:flex-row  lg:items-start lg:justify-center lg:space-x-24 lg:pt-14">
+       <FileImageInput
+  fileImg={fileImg}
+  setFileImg={(_, file) => setFileImg(file)}
+  imgUrlTemplate={avatar}
+  name="avatar"
+/>
         <div className="flex w-[300px] flex-col items-stretch text-left">
           <p className="mb-2 border-b border-primary pt-2 text-left text-[16px] font-semibold">
             Username
@@ -109,13 +128,19 @@ export default function CreateUser() {
           />
           <div className="flex w-full flex-row justify-start space-x-2 pt-4">
             <Link href="/u">
-              <Button
-                text="Save"
-                onClick={() => {
-                  createProfile(fileImg, uid, name, bio, location)
-                }}
-                active={true}
-              />
+<Button
+  text="Save"
+  onClick={async () => {
+    const saved = await createProfile(
+      fileImg, uid, name, bio, location
+    )
+
+    if (saved) {
+      router.push('/u')
+    }
+  }}
+  active={true}
+/>
             </Link>
             <Link href="/u">
               <Button

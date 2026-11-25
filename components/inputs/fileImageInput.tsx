@@ -239,7 +239,7 @@ function DisplayPredefinedImage({
         <></>
       )}
       <input
-        id={mode}
+     id={`img-input-${mode}`}
         type="file"
         className="hidden"
         accept="image/*"

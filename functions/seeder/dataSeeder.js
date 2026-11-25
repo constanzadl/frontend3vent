@@ -141,9 +141,9 @@ module.exports = class DataSeeder {
         var currentDate = new Date()
         var startDate = faker.date.between(
           currentDate,
-          '2025-01-01T00:00:00.000Z'
+          '2028-01-01T00:00:00.000Z'
         )
-        var endDate = faker.date.between(startDate, '2025-01-01T00:00:00.000Z')
+        var endDate = faker.date.between(startDate, '2028-01-01T00:00:00.000Z')
         var eventYear = startDate.getUTCFullYear()
         var eventId =
           adjective +
