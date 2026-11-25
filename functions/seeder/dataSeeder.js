@@ -250,6 +250,18 @@ async setDummyEventsCollectionInDB() {
       description: 'Explore the future of decentralized communities, technology and innovation.'
     }
   ]
+const eventLocations = [
+  { address: 'San Francisco, CA', lat: 37.7749, long: -122.4194 },
+  { address: 'New York, NY', lat: 40.7128, long: -74.0060 },
+  { address: 'Miami, FL', lat: 25.7617, long: -80.1918 },
+  { address: 'Austin, TX', lat: 30.2672, long: -97.7431 },
+  { address: 'Seattle, WA', lat: 47.6062, long: -122.3321 },
+  { address: 'Los Angeles, CA', lat: 34.0522, long: -118.2437 },
+  { address: 'Boston, MA', lat: 42.3601, long: -71.0589 },
+  { address: 'Denver, CO', lat: 39.7392, long: -104.9903 },
+  { address: 'Chicago, IL', lat: 41.8781, long: -87.6298 },
+  { address: 'San Diego, CA', lat: 32.7157, long: -117.1611 }
+]
 
   try {
     for (const [index, event] of events.entries()) {
@@ -278,11 +290,7 @@ async setDummyEventsCollectionInDB() {
         ticket_max: 50 + index * 10,
         event_id: eventId,
         registered_attendees: 0,
-        location: {
-          address: faker.address.streetAddress(),
-          lat: faker.address.latitude(),
-          long: faker.address.longitude()
-        }
+  location: eventLocations[index]
       })
     }
 
