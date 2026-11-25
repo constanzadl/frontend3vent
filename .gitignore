@@ -44,3 +44,7 @@ yarn-error.log*
 functions/*.log
 *.log
 ui-debug.log
+
+# Local Firebase emulator data
+emulator-data/
+emulator-data-backup/
