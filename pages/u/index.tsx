@@ -22,10 +22,14 @@ export default function UserProfile() {
   const auth = useAuth()
   const uid = auth?.uid
 
-  useEffect(() => {
-    const getInfo = async () => {
+useEffect(() => {
+  if (!uid) return
+
+  const getInfo = async () => {
+    try {
       const docRef = doc(db, 'users', uid)
       const docSnap = await getDoc(docRef)
+
       if (docSnap.exists()) {
         setName(docSnap.data().username)
         setBio(docSnap.data().bio)
@@ -33,12 +37,15 @@ export default function UserProfile() {
         setAvatar(docSnap.data().avatar)
         setTwitterName(docSnap.data().twitter_name)
       } else {
-        // doc.data() will be undefined in this case
         console.log('No such document!')
       }
+    } catch (error) {
+      console.error('Error loading user profile:', error)
     }
-    getInfo()
-  }, [])
+  }
+
+  getInfo()
+}, [uid])
 
   return (
     <div className="flex w-full flex-col items-start space-y-4 bg-secondaryBg px-4 py-[40px] text-center sm:px-0">
